@@ -1,21 +1,21 @@
 'use strict';
-import express, { Router } from 'express';
-import { urlencoded, json } from 'body-parser';
-import cors from 'cors';
-import { connect } from 'diskdb';
+const  express  =  require('express');
+const  bodyParser  =  require('body-parser');
+const cors = require('cors');
+const db = require('diskdb');
 
 
 const  app  =  express();
-const  router  =  Router();
+const  router  =  express.Router();
 app.use(cors())
-router.use(urlencoded({ extended:  false }));
-router.use(json());
+router.use(bodyParser.urlencoded({ extended:  false }));
+router.use(bodyParser.json());
 
 // diskdb connection
-connect('./data', ['tasksList']);
+db.connect('./data', ['tasksList']);
 
 router.get('/tasks-list', (req, res) => {
-   res.json(tasksList.find());
+   res.json(db.tasksList.find());
 });
 
 router.post("/tasks-list", (req, res) => {
@@ -23,10 +23,10 @@ router.post("/tasks-list", (req, res) => {
    console.log('Adding new task list: ', listItem);
 
    // add new list item to db
-   tasksList.save(listItem);
+   db.tasksList.save(listItem);
 
    // return updated list
-   res.json(tasksList.find());
+   res.json(db.tasksList.find());
 });
 
 // update an item
@@ -35,9 +35,9 @@ router.put("/tasks-list/:id", (req, res) => {
    const item = req.body;
    console.log("Editing item: ", itemId, " to be ", item);
 
-   tasksList.update({ id: itemId }, item);
+   db.tasksList.update({ id: itemId }, item);
 
-   res.json(tasksList.find());
+   res.json(db.tasksList.find());
 });
 
 // delete item from list
@@ -45,9 +45,9 @@ router.delete("/tasks-list/:id", (req, res) => {
    const itemId = req.params.id;
    console.log("Delete item with id: ", itemId);
 
-   tasksList.remove({ id: itemId });
+   db.tasksList.remove({ id: itemId });
 
-   res.json(tasksList.find());
+   res.json(db.tasksList.find());
 });
 
 app.use(router);
