@@ -6,7 +6,6 @@ module.exports = function (router, db) {
      router.post("/tasks-list", (req, res) => {
         const listItem = req.body;
         console.log('Adding new task list: ', listItem);
-     
         // add new list item to db
         db.tasksList.save(listItem);
      

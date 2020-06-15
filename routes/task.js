@@ -1,14 +1,15 @@
 const { v4: uuidv4 } = require('uuid');
-const _array = require('lodash/array');
+const _ = require('lodash');
 
 module.exports = function (router, db) {
     
     function findTaskList(taskListId){
-        return db.tasksList.find({_id: taskListId});
+        return db.tasksList.findOne({_id: taskListId});
     }
+
     function filterTask(taskListId, taskId){
         let taskList = findTaskList(taskListId);
-        let tasks = _array.filter(taskList.tasks, (task) => {
+        let tasks = _.filter(taskList.tasks, (task) => {
             return task._id != taskId;
         });
         return tasks;
@@ -30,22 +31,15 @@ module.exports = function (router, db) {
         console.log('Adding new task list: ', listItem, taskListId);
         
         let taskList = findTaskList(taskListId);
-        listItem._id = uuidv4();
+        // if we are updating task from one list to another list then we don't have to generate the id again.
+        listItem._id = listItem._id || uuidv4(); 
+        console.log('==== tasklist =>', taskList);
         taskList.tasks = taskList.tasks || [];
         taskList.tasks.push(listItem);
 
         console.log('creating tasks =>', taskList);
         // add new list item to db
-        // let result = db.tasksList.update({ _id: taskListId }, taskList, options);
-        
-        let allTasksList = db.tasksList.find();
-        let filteredTasksList = _array.filter(allTasksList, (tasksList) => {
-            db.tasksList.remove({ _id: tasksList._id });
-            return tasksList._id != taskListId;
-        });
-        filteredTasksList.push(taskList);
-        db.tasksList.save(filteredTasksList);
-
+        let result = db.tasksList.update({ _id: taskListId }, taskList, options);
         console.log('after update', result, taskList);
         console.log('from db ', findTaskList(taskListId));
         // return updated list
@@ -61,12 +55,13 @@ module.exports = function (router, db) {
         
         let tasks = filterTask(taskListId, taskId);
         tasks.push(task);
+        let taskList = findTaskList(taskListId);
         taskList.tasks = tasks;
         // add new list item to db
         db.tasksList.update({ _id: taskListId }, taskList, options);
      
         // return updated list
-        res.json(taskList);
+        res.json(findTaskList(taskListId));
      });
      
      // delete item from list
@@ -75,11 +70,12 @@ module.exports = function (router, db) {
         const taskListId = req.params.tasklistid;
         console.log("Delete item with id: ", taskId);
         
+        let taskList = findTaskList(taskListId);
         taskList.tasks = filterTask(taskListId, taskId);
         // add new list item to db
         db.tasksList.update({ _id: taskListId }, taskList, options);
      
         // return updated list
-        res.json(taskList);
+        res.json(findTaskList(taskListId));
      });
 };
