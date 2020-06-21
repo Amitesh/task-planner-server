@@ -293,7 +293,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
     /* harmony default export */
 
 
-    __webpack_exports__["default"] = "<div>\r\n  <div class=\"modal-header\">\r\n    <h4 class=\"modal-title\">{{title}}</h4>\r\n  </div>\r\n  <div class=\"modal-body\">\r\n    <p>Name</p>\r\n    <input [formControl]=\"input\" type=\"text\" (keydown.enter)=\"input.valid && onCreate()\">\r\n    <p class=\"small\" [class.text-danger]=\"input.invalid && input.dirty\" *ngIf=\"input.invalid && input.dirty\">Input can't\r\n      be blank.</p>\r\n  </div>\r\n  <div class=\"modal-footer\">\r\n    <button type=\"button\" class=\"btn btn-outline-dark\" (click)=\"activeModal.close()\">Cancel</button>\r\n    <button type=\"button\" class=\"btn\" [class.btn-outline-dark]=\"input.invalid\" [class.btn-primary]=\"input.valid\"\r\n      [class.disabled]=\"input.invalid\" [disabled]=\"input.invalid\" (click)=\"onCreate()\">OK</button>\r\n  </div>\r\n</div>";
+    __webpack_exports__["default"] = "<div>\r\n  <div class=\"modal-header\">\r\n    <h4 class=\"modal-title\">{{title}}</h4>\r\n  </div>\r\n  <div class=\"modal-body\">\r\n    <p>Name</p>\r\n    <input [formControl]=\"input\" type=\"text\" (keydown.enter)=\"input.valid && onCreate()\">\r\n    <p class=\"small\" [class.text-danger]=\"input.invalid && input.dirty\" *ngIf=\"input.invalid && input.dirty\">Input can't\r\n      be blank.</p>\r\n  </div>\r\n  <div class=\"modal-footer\">\r\n    <button type=\"button\" class=\"btn btn-outline-dark\" (click)=\"activeModal.close()\">Cancel</button>\r\n    <button type=\"button\" class=\"btn\" [class.btn-outline-dark]=\"input.invalid\" [class.btn-primary]=\"input.valid\"\r\n      [class.disabled]=\"input.invalid\" [disabled]=\"input.invalid\" (click)=\"onCreate()\">Ok</button>\r\n  </div>\r\n</div>";
     /***/
   },
 
@@ -4044,9 +4044,9 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
     /* harmony import */
 
 
-    var _interceptors_http_interceptor__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(
-    /*! ./interceptors/http.interceptor */
-    "./src/app/interceptors/http.interceptor.ts");
+    var _interceptors_app_http_interceptor__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(
+    /*! ./interceptors/app-http.interceptor */
+    "./src/app/interceptors/app-http.interceptor.ts");
     /* harmony import */
 
 
@@ -4081,7 +4081,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
       declarations: [_app_component__WEBPACK_IMPORTED_MODULE_6__["AppComponent"]],
       providers: [_task_planner_sevices_task_list_service__WEBPACK_IMPORTED_MODULE_7__["TaskListService"], _task_planner_sevices_task_service__WEBPACK_IMPORTED_MODULE_9__["TaskService"], {
         provide: _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HTTP_INTERCEPTORS"],
-        useClass: _interceptors_http_interceptor__WEBPACK_IMPORTED_MODULE_5__["AppHttpInterceptor"],
+        useClass: _interceptors_app_http_interceptor__WEBPACK_IMPORTED_MODULE_5__["AppHttpInterceptor"],
         multi: true
       }],
       bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_6__["AppComponent"]]
@@ -4090,15 +4090,15 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
   },
 
   /***/
-  "./src/app/interceptors/http.interceptor.ts":
-  /*!**************************************************!*\
-    !*** ./src/app/interceptors/http.interceptor.ts ***!
-    \**************************************************/
+  "./src/app/interceptors/app-http.interceptor.ts":
+  /*!******************************************************!*\
+    !*** ./src/app/interceptors/app-http.interceptor.ts ***!
+    \******************************************************/
 
   /*! exports provided: AppHttpInterceptor */
 
   /***/
-  function srcAppInterceptorsHttpInterceptorTs(module, __webpack_exports__, __webpack_require__) {
+  function srcAppInterceptorsAppHttpInterceptorTs(module, __webpack_exports__, __webpack_require__) {
     "use strict";
 
     __webpack_require__.r(__webpack_exports__);
@@ -4170,6 +4170,9 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
             if (error.error instanceof ErrorEvent) {
               // client-side error
               errorMessage = "Error: ".concat(error.error.message);
+            } else if (error.error.status) {
+              // server-side error
+              errorMessage = "Error Code: ".concat(error.error.status, "\nMessage: ").concat(error.error.message);
             } else {
               // server-side error
               errorMessage = "Error Code: ".concat(error.status, "\nMessage: ").concat(error.message);
@@ -4369,7 +4372,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
         this.activeModal = activeModal;
         this.onSubmit = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"]();
-        this.input = new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormControl"]("", _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required);
+        this.input = new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormControl"]("", [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required, _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].pattern(/([\S]+[\s]*)*[\S]+/)]);
       }
 
       _createClass(InputDialogComponent, [{
@@ -4466,6 +4469,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         _classCallCheck(this, TaskListService);
 
         this.http = http; // TaskList resource api end point. It can be put in a constant config file.
+        // private taskListUrl: string = "http://localhost:3000/tasks-list";
 
         this.taskListUrl = "/tasks-list";
       }
@@ -4577,6 +4581,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         _classCallCheck(this, TaskService);
 
         this.http = http; // TaskList resource api end point. It can be put in a constant config file.
+        // private taskListUrl: string = "http://localhost:3000/tasks-list";
 
         this.taskListUrl = "/tasks-list";
       }
@@ -4979,7 +4984,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
           var dialogObj = this.dialogService.open(_dialogs_input_dialogs_input_dialog_component__WEBPACK_IMPORTED_MODULE_3__["InputDialogComponent"], {
             backdrop: "static"
           });
-          dialogObj.componentInstance.title = "Add new list";
+          dialogObj.componentInstance.title = "Add new task list";
           dialogObj.componentInstance.onSubmit.subscribe(function (listName) {
             _this7.taskListService.post({
               name: listName
@@ -5001,7 +5006,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
           var dialogObj = this.dialogService.open(_dialogs_confirm_dialogs_confirm_dialog_component__WEBPACK_IMPORTED_MODULE_5__["ConfirmDialogComponent"], {
             backdrop: "static"
           });
-          dialogObj.componentInstance.title = "Delete list";
+          dialogObj.componentInstance.title = "Delete task list";
           dialogObj.componentInstance.onDelete.subscribe(function (deleteList) {
             if (deleteList) {
               _this8.taskListService["delete"](taskListToDelete).subscribe(function (taskLists) {

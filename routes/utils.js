@@ -1,6 +1,5 @@
 var utils = {
     isValidName: function (val){
-        console.log(val)
         const type = typeof val;
         return !(
            val === null || 

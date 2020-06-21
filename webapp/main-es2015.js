@@ -244,7 +244,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<div>\r\n  <div class=\"modal-header\">\r\n    <h4 class=\"modal-title\">{{title}}</h4>\r\n  </div>\r\n  <div class=\"modal-body\">\r\n    <p>Name</p>\r\n    <input [formControl]=\"input\" type=\"text\" (keydown.enter)=\"input.valid && onCreate()\">\r\n    <p class=\"small\" [class.text-danger]=\"input.invalid && input.dirty\" *ngIf=\"input.invalid && input.dirty\">Input can't\r\n      be blank.</p>\r\n  </div>\r\n  <div class=\"modal-footer\">\r\n    <button type=\"button\" class=\"btn btn-outline-dark\" (click)=\"activeModal.close()\">Cancel</button>\r\n    <button type=\"button\" class=\"btn\" [class.btn-outline-dark]=\"input.invalid\" [class.btn-primary]=\"input.valid\"\r\n      [class.disabled]=\"input.invalid\" [disabled]=\"input.invalid\" (click)=\"onCreate()\">OK</button>\r\n  </div>\r\n</div>");
+/* harmony default export */ __webpack_exports__["default"] = ("<div>\r\n  <div class=\"modal-header\">\r\n    <h4 class=\"modal-title\">{{title}}</h4>\r\n  </div>\r\n  <div class=\"modal-body\">\r\n    <p>Name</p>\r\n    <input [formControl]=\"input\" type=\"text\" (keydown.enter)=\"input.valid && onCreate()\">\r\n    <p class=\"small\" [class.text-danger]=\"input.invalid && input.dirty\" *ngIf=\"input.invalid && input.dirty\">Input can't\r\n      be blank.</p>\r\n  </div>\r\n  <div class=\"modal-footer\">\r\n    <button type=\"button\" class=\"btn btn-outline-dark\" (click)=\"activeModal.close()\">Cancel</button>\r\n    <button type=\"button\" class=\"btn\" [class.btn-outline-dark]=\"input.invalid\" [class.btn-primary]=\"input.valid\"\r\n      [class.disabled]=\"input.invalid\" [disabled]=\"input.invalid\" (click)=\"onCreate()\">Ok</button>\r\n  </div>\r\n</div>");
 
 /***/ }),
 
@@ -3308,7 +3308,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_platform_browser__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/platform-browser */ "./node_modules/@angular/platform-browser/__ivy_ngcc__/fesm2015/platform-browser.js");
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/__ivy_ngcc__/fesm2015/http.js");
 /* harmony import */ var _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @ng-bootstrap/ng-bootstrap */ "./node_modules/@ng-bootstrap/ng-bootstrap/__ivy_ngcc__/fesm2015/ng-bootstrap.js");
-/* harmony import */ var _interceptors_http_interceptor__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./interceptors/http.interceptor */ "./src/app/interceptors/http.interceptor.ts");
+/* harmony import */ var _interceptors_app_http_interceptor__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./interceptors/app-http.interceptor */ "./src/app/interceptors/app-http.interceptor.ts");
 /* harmony import */ var _app_component__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./app.component */ "./src/app/app.component.ts");
 /* harmony import */ var _task_planner_sevices_task_list_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./task-planner/sevices/task-list.service */ "./src/app/task-planner/sevices/task-list.service.ts");
 /* harmony import */ var _task_planner_task_planner_module__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./task-planner/task-planner.module */ "./src/app/task-planner/task-planner.module.ts");
@@ -3335,7 +3335,7 @@ AppModule = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
             _task_planner_sevices_task_service__WEBPACK_IMPORTED_MODULE_9__["TaskService"],
             {
                 provide: _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HTTP_INTERCEPTORS"],
-                useClass: _interceptors_http_interceptor__WEBPACK_IMPORTED_MODULE_5__["AppHttpInterceptor"],
+                useClass: _interceptors_app_http_interceptor__WEBPACK_IMPORTED_MODULE_5__["AppHttpInterceptor"],
                 multi: true,
             },
         ],
@@ -3347,10 +3347,10 @@ AppModule = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
 
 /***/ }),
 
-/***/ "./src/app/interceptors/http.interceptor.ts":
-/*!**************************************************!*\
-  !*** ./src/app/interceptors/http.interceptor.ts ***!
-  \**************************************************/
+/***/ "./src/app/interceptors/app-http.interceptor.ts":
+/*!******************************************************!*\
+  !*** ./src/app/interceptors/app-http.interceptor.ts ***!
+  \******************************************************/
 /*! exports provided: AppHttpInterceptor */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -3393,6 +3393,10 @@ let AppHttpInterceptor = class AppHttpInterceptor {
             if (error.error instanceof ErrorEvent) {
                 // client-side error
                 errorMessage = `Error: ${error.error.message}`;
+            }
+            else if (error.error.status) {
+                // server-side error
+                errorMessage = `Error Code: ${error.error.status}\nMessage: ${error.error.message}`;
             }
             else {
                 // server-side error
@@ -3516,7 +3520,10 @@ let InputDialogComponent = class InputDialogComponent {
     constructor(activeModal) {
         this.activeModal = activeModal;
         this.onSubmit = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"]();
-        this.input = new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormControl"]("", _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required);
+        this.input = new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormControl"]("", [
+            _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required,
+            _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].pattern(/([\S]+[\s]*)*[\S]+/),
+        ]);
     }
     set initialValue(value) {
         this.input.setValue(value);
@@ -3579,6 +3586,7 @@ let TaskListService = class TaskListService {
     constructor(http) {
         this.http = http;
         // TaskList resource api end point. It can be put in a constant config file.
+        // private taskListUrl: string = "http://localhost:3000/tasks-list";
         this.taskListUrl = "/tasks-list";
     }
     /**
@@ -3648,6 +3656,7 @@ let TaskService = class TaskService {
     constructor(http) {
         this.http = http;
         // TaskList resource api end point. It can be put in a constant config file.
+        // private taskListUrl: string = "http://localhost:3000/tasks-list";
         this.taskListUrl = "/tasks-list";
     }
     /**
@@ -3912,7 +3921,7 @@ let TaskPlannerComponent = class TaskPlannerComponent {
         const dialogObj = this.dialogService.open(_dialogs_input_dialogs_input_dialog_component__WEBPACK_IMPORTED_MODULE_3__["InputDialogComponent"], {
             backdrop: "static",
         });
-        dialogObj.componentInstance.title = "Add new list";
+        dialogObj.componentInstance.title = "Add new task list";
         dialogObj.componentInstance.onSubmit.subscribe((listName) => {
             this.taskListService
                 .post({ name: listName })
@@ -3929,7 +3938,7 @@ let TaskPlannerComponent = class TaskPlannerComponent {
         const dialogObj = this.dialogService.open(_dialogs_confirm_dialogs_confirm_dialog_component__WEBPACK_IMPORTED_MODULE_5__["ConfirmDialogComponent"], {
             backdrop: "static",
         });
-        dialogObj.componentInstance.title = "Delete list";
+        dialogObj.componentInstance.title = "Delete task list";
         dialogObj.componentInstance.onDelete.subscribe((deleteList) => {
             if (deleteList) {
                 this.taskListService
