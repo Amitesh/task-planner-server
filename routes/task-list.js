@@ -19,7 +19,8 @@ module.exports = function (router, db) {
     */
    router.post("/tasks-list", (req, res) => {
       const taskList = req.body;
-      if (utils.isValidName(taskList.name)) {
+      if (utils.isValidName(taskList && taskList.name)) {
+         taskList.name = taskList.name.trim();
          // add new list item to db
          db.tasksList.save(taskList);
          // return updated list
@@ -37,7 +38,8 @@ module.exports = function (router, db) {
    router.put("/tasks-list/:id", (req, res) => {
       const taskListId = req.params.id;
       const taskList = req.body;
-      if (utils.isValidName(taskList.name)) {
+      if (utils.isValidName(taskList && taskList.name)) {
+         taskList.name = taskList.name.trim();
          db.tasksList.update({ _id: taskListId }, taskList);
          res.json(db.tasksList.find());
       }

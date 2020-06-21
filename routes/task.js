@@ -60,6 +60,7 @@ module.exports = function (router, db) {
         else {
             // if we are updating task from one list to another list then we don't have to generate the id again.
             task._id = task._id || uuidv4();
+            task.name = task.name.trim();
             taskList.tasks = taskList.tasks || [];
             taskList.tasks.push(task);
 
@@ -87,6 +88,7 @@ module.exports = function (router, db) {
             res.status(422).json({ status: 422, message: 'Task list not found.' });
         }
         else {
+            task.name = task.name.trim();
             tasks.push(task);
             let taskList = findTaskListById(taskListId);
             taskList.tasks = tasks;
