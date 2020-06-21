@@ -1,3 +1,5 @@
+const utils = require('./utils.js');
+
 /**
  * Module to provide RESTful api for TaskList resource
  * @param {*} router Router objet
@@ -16,11 +18,17 @@ module.exports = function (router, db) {
     * Api method to create/add a new tasklist
     */
    router.post("/tasks-list", (req, res) => {
-      const tasksList = req.body;
-      // add new list item to db
-      db.tasksList.save(tasksList);
-      // return updated list
-      res.json(db.tasksList.find());
+      const taskList = req.body;
+      if (utils.isValidName(taskList.name)) {
+         // add new list item to db
+         db.tasksList.save(taskList);
+         // return updated list
+         res.json(db.tasksList.find());
+      }
+      else {
+         res.status(422).json({ status: 422, message: 'Invalid task list name.' });
+      }
+
    });
 
    /**
@@ -29,9 +37,13 @@ module.exports = function (router, db) {
    router.put("/tasks-list/:id", (req, res) => {
       const taskListId = req.params.id;
       const taskList = req.body;
-
-      db.tasksList.update({ _id: taskListId }, taskList);
-      res.json(db.tasksList.find());
+      if (utils.isValidName(taskList.name)) {
+         db.tasksList.update({ _id: taskListId }, taskList);
+         res.json(db.tasksList.find());
+      }
+      else {
+         res.status(422).json({ status: 422, message: 'Invalid task list name.' });
+      }
    });
 
    /**
