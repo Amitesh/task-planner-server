@@ -1,13 +1,14 @@
 Task to complete
-- UI test cases
-- tslint
+-x UI test cases
+-x tslint
 - Improve ReadMe, Add design doc
 - Code clean up
-- Css to Scss
-- UI Design needs to improve
+-x Css to Scss
+-x UI Design needs to improve
 - optimize lodash
-- cloud setup
-- Http Error handling
+-x cloud setup
+-x Http Error handling
+-x set environment variable
 
 
 links:
