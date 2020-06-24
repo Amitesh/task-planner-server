@@ -94,11 +94,10 @@ module.exports = function (router, db) {
             taskList.tasks = tasks;
             // add new list item to db
             db.tasksList.update({ _id: taskListId }, taskList, options);
-    
+
             // return updated list
             res.json(findTaskListById(taskListId));
         }
-        
     });
 
     /**

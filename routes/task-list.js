@@ -1,4 +1,5 @@
 const utils = require('./utils.js');
+const task = require('./task.js');
 
 /**
  * Module to provide RESTful api for TaskList resource
@@ -21,6 +22,7 @@ module.exports = function (router, db) {
       const taskList = req.body;
       if (utils.isValidName(taskList && taskList.name)) {
          taskList.name = taskList.name.trim();
+         taskList.tasks = taskList.tasks || [];
          // add new list item to db
          db.tasksList.save(taskList);
          // return updated list
@@ -40,6 +42,7 @@ module.exports = function (router, db) {
       const taskList = req.body;
       if (utils.isValidName(taskList && taskList.name)) {
          taskList.name = taskList.name.trim();
+         taskList.tasks = taskList.tasks || [];
          db.tasksList.update({ _id: taskListId }, taskList);
          res.json(db.tasksList.find());
       }
