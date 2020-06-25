@@ -10,6 +10,7 @@ Task to complete
 -x Http Error handling
 -x set environment variable
 -x Fix the error handling on the services and sortablejs
+- Fix the build size
 
 
 links:
