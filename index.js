@@ -17,6 +17,7 @@ db.connect('./data', ['tasksList']);
 
 // Point static path to dist
 app.use(express.static(path.join(__dirname, 'webapp')));
+app.use(express.static(path.join(__dirname, 'webapp/assets/images')));
 
 // Add all route files for Task List and Task
 require('./routes/task-list')(router, db);
