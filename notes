@@ -12,7 +12,7 @@ Task to complete
 -x Fix the error handling on the services and sortablejs
 -x Fix the build size
 
-- Add theme concept
+-x Add theme concept
 - Add theme service test cases
 - Enhance task move experience by increasing the drop zone
 - Change the name of title
