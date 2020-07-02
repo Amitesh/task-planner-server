@@ -14,6 +14,8 @@ Task to complete
 
 -x Add theme concept
 - Add theme service test cases
-- Enhance task move experience by increasing the drop zone
+    > sameHeight, autofocus, editable, themeswitcher service,
+    > themeswitcher component, few function in component files
+-x Enhance task move experience by increasing the drop zone
 -x Change the name of title
 -x Make it responsive
